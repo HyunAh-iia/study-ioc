@@ -1,7 +1,7 @@
 package my.study;
 
 public class DataAccessFactory {
-	public static CustomerDataAccess getDataAccessObject() {
+	public static ICustomerDataAccess getDataAccessObject() {
 		return new CustomerDataAccess();
 	}
 }
