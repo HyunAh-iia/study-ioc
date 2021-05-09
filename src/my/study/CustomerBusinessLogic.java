@@ -1,13 +1,20 @@
 package my.study;
 
 public class CustomerBusinessLogic {
-	private ICustomerDataAccess customerDataAccess;
+	public ICustomerDataAccess dataAccess;
 
 	public CustomerBusinessLogic() {
-		customerDataAccess = DataAccessFactory.getDataAccessObject();
+	}
+
+	public void setDataAccess(ICustomerDataAccess dataAccess) {
+		this.dataAccess = dataAccess;
+	}
+
+	public ICustomerDataAccess getDataAccess() {
+		return this.dataAccess;
 	}
 
 	public String getCustomerName(int id) {
-		return customerDataAccess.getCustomerName(id);
+		return dataAccess.getCustomerName(id);
 	}
 }
