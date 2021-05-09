@@ -48,3 +48,33 @@ study ioc using java
 ### 문제점
 - 여전히 느슨한 결합을 충분히 이뤄냈다고 말하기 어려움
 - `CustomerBusinessLogic` 클래스는 `ICustomerDataAccess` 를 얻기 위해 팩토리 클래스(`DataAccessFactory`)를 참조하고 있기 떄문임. 이 부분이 바로 `DI(Dependency Injection) 패턴` 의 적용이 필요한 부분임 (다음 단계에서 DI와 Strategy 패턴을 사용하여 개선해보겠음)
+
+## Step 3. IoC 원칙 구현을 위해 DI Pattern 이용
+이제 DI와 Strategy 패턴을 통해 클래스간의 결합도를 낮추어 보자!
+
+### DI 패턴이란?
+DI(Dependency Injection, 의존관계 주입)는 종속된 객체의 생성을 반전시키는 IoC 원칙을 구현한 디자인 패턴이다. 이전에 DIP 원칙에 따라 추상화하여 클래스간의 결합도를 낮추었다. 하지만 이전 포스팅 예제에서 여전히 `CustomerBusinessLogic` 클래스가 `ICustomerDataAccess` 객체를 반환하기 위해 `DataAccessFactory` 클래스를 참조하고 있다. 이제 DI와 Strategy 패턴을 구현하여 종속된 클래스의 객체 생성을 완전히 클래스 밖으로 내보낼 수 있다.
+Injector 클래스로서 `CustomerService` 클래스를 만들고, Service 클래스인 `CustomerDataAccess` 클래스의 객체를 Client 클래스인 `CustomerBusinessLogic` 에게 세 가지 방법으로 주입해보겠다.
+
+### DI 패턴 적용 3 가지 방법 
+- 생성자 주입(Constructor Injection) : Injector 클래스가 Client 클래스의 생성자를 통해 Service 클래스(dependency)의 객체를 주입함
+- 메서드 주입(Method Injection) : Client 클래스가 어떤 인터페이스를 구현하여 어떤 메소드가 종속성을 제공하는 지 선언하고, Injector 클래스는 이 인터페이스를 사용하여 Client 클래스에 종속성을 제공함
+- Property Injection : Setter Injection처럼 Client 클래스의 public property를 통해 객체를 주입함
+
+### 생성자 주입(Constructor Injection)
+[코드보기](https://github.com/HyunAh-iia/study-ioc/pull/4/files)
+- `CustomerService` 클래스가 `CustomerDataAccess` 클래스의 객체를 생성하여 `CustomerBusinessLogic` 클래스에게 의존 관계를 주입함
+- 이제 `CustomerBusinessLogic` 클래스는 `new` 키워드로 `CustomerDataAccess` 클래스 객체를 생성하거나 Factory 클래스인 `DataAccessFactory` 를 사용할 필요가 없어짐
+- 이로서 `CustomerDataAccess` 와 `CustomerBusinessLogic` 클래스는 더욱 더 낮은 결합도를 가지가 됨
+
+### 메서드 주입(Method Injection)
+[코드보기](https://github.com/HyunAh-iia/study-ioc/pull/5/files)
+- 클래스 메서드나 인터페이스 메서드를 통해 의존관계를 주입할 수 있음 
+- `CustomerBusinessLogic` 클래스가 `setDependency()` 메서드를 갖고 있는 `IDataAccessDependency` 인터페이스를 구현함 
+- 그래서 Injector 클래스인 `CustomerService` 가 `setDependency()` 메서드를 통해 의존 관계를 주입할 수 있음
+
+### Property Injection
+[코드보기](https://github.com/HyunAh-iia/study-ioc/pull/6/files)
+- 의존관계를 public한 필드를 통해 제공하는 것을 Property Injection이라고 함
+- `CustomerBusinessLogic` 는  `ICustomerDataAccess` 타입의 public 필드 `dataAccess`에 대한 getter, setter 메서드를 구현함 
+- 그래서 `CustomerService` 클래스가 public한 필드인 `dataAccess`를 통해 `CustomerDataAccess` 클래스 객체 생성을 할 수 있게 됨
