@@ -1,5 +1,5 @@
 # Java로 알아보는 느슨한 결합(IoC, DIP, DI, IoC Container)
-study ioc using java
+IoC 예제 프로젝트의 내용을 이해하기 쉽게 [블로그 포스팅](https://prohannah.tistory.com/157) 에 정리했습니다.
 
 ## Step 0. 강하게 결합된 두 클래스
 [코드보기](https://github.com/HyunAh-iia/study-ioc/pull/1/files)
